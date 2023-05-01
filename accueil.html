@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+<title>read CSV </title>
+</head>
+<body>
+    <input type="file" id="uploadfile" accept=".csv"> 
+    <button id="uploadconfirm">Upload File</button>
+    <a href="pareto.html"><button>Start</button></a>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.1/papaparse.min.js"></script>
+<script>
+    
+    let datapoints = [];
+    let factoryProcess=[];
+    const uploadconfirm = document.getElementById('uploadconfirm').
+     addEventListener('click', () => { 
+        Papa.parse(document.getElementById('uploadfile').files[0],
+        {
+            download: true,
+            header: true,
+            skipEmptyLines: true, 
+            complete: function(results){ 
+                
+                datapoints = extractNumericValues(results.data);
+                factoryProcess = extractstringicValues(results.data);
+
+                console.log(factoryProcess);
+                localStorage.setItem('datapoints', JSON.stringify(datapoints));
+                localStorage.setItem('factoryProcess', JSON.stringify(factoryProcess));
+            }
+        });
+
+    });
+
+    function extractNumericValues(data) {
+        const datapoints = [];
+        for (let i = 0; i < data.length; i++) {
+            datapoints.push(parseInt(data[i]["Total"]));
+        }
+      
+        return datapoints;
+    }
+    function extractstringicValues(data) {
+        const factoryProcess = [];
+        for (let i = 0; i < data.length; i++) {
+            factoryProcess.push(data[i]["Root"]);
+        }
+
+        return factoryProcess;
+    }
+
+
+</script>
+</body>
+</html>
